@@ -11,7 +11,8 @@ Fraga es una aplicación de gestion de actividades forestales promovida por guar
 ### APP MOVIL : 
 **Flutter + Material Design**
 ### APP DESKTOP :
-**Vue + Flutter**
+**Vue + Eelectron**
+
 
 
 
