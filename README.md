@@ -1,11 +1,13 @@
 # Fraga
 ## Modelo de Negocio
+---
 Fraga es una aplicación de gestion de actividades forestales promovida por guardabosques. Orientada a las actividades al aire libre y el cuidado y la naturaleza de los bosques locales.
 ---
 ## Arquitectura: 
 ### API :
-** SpringBoot + Kotlin **
+**SpringBoot + Kotlin**
 ### APP MOVIL : 
-** Flutter + Material Design **
+**Flutter + Material Design**
 ### APP DESKTOP :
-** Vue + Flutter **
+**Vue + Flutter**
+
