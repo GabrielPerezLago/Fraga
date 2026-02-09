@@ -2,3 +2,6 @@ BBDD
 api/FragaAPI/.idea
 api/FragaAPI/build
 api/FragaAPI/.gradle
+api/FragaAPI/.env
+api/FragaAPI/src/test
+api/FragaAPI/src/main/resources/*
