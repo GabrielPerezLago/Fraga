@@ -9,4 +9,8 @@ class UsersService(private val usersRepo: UsersRepository) {
     fun findAll(): List<UserModel>  {
        return usersRepo.findAll()
     }
+
+    fun findUser(email: String, password: String): UserModel? {
+        return usersRepo.findByEmailAndPassword(email, password)
+    }
 }
