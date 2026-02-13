@@ -8,10 +8,11 @@ Fraga es una aplicación de gestion de actividades forestales promovida por guar
 **Mongo DB**
 ### API :
 **SpringBoot + Kotlin**
-### APP MOVIL : 
+### APP MOVILE : 
 **Flutter + Material Design**
 ### APP DESKTOP :
 **Vue + Eelectron**
+
 
 
 

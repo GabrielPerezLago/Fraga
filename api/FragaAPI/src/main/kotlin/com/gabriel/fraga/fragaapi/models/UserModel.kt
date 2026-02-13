@@ -5,11 +5,11 @@ import java.util.Date
 
 @Document(collection = "users")
 data class UserModel(
-    val id: String,
+    val id: String?,
     val nombre: String,
-    val apellidos: String,
+    val apellidos: String?,
     val email: String,
-    val password: String,
-    val nacimiento: Date,
+    val password: String?,
+    val nacimiento: Date?,
     val rol: String
 )

@@ -7,7 +7,7 @@ api/FragaAPI/.gradle
 api/FragaAPI/.env
 api/FragaAPI/src/test
 api/FragaAPI/src/main/resources/*
-
+api/FragaAPI/.kotlin
 # Flutter
 movile/.dart_tool
 movile/.idea
