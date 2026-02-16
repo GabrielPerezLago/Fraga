@@ -20,6 +20,6 @@ class ClassicButton extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           foregroundColor: textColor,
         ),
-        child: Text(text, style: TextStyle(fontSize: 20, fontFamily: 'Frijole'),));
+        child: Text(text, style: TextStyle(fontSize: 30, fontFamily: 'Regular'),));
   }
 }

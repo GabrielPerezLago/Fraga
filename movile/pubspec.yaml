@@ -31,6 +31,8 @@ dependencies:
   flutter:
     sdk: flutter
   http: ^1.2.0
+  flutter_secure_storage: ^9.0.0
+
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -60,10 +62,18 @@ flutter:
   assets:
     - assets/images/fondo.jpeg
     - assets/images/logo.png
+    - assets/images/cloud_white.svg
+    - assets/images/no_conexion.png
+    - assets/images/noconexion.png
   fonts:
     - family: Frijole
       fonts:
         - asset: assets/fonts/frijole.ttf
+
+
+    - family: Regular
+      fonts:
+        - asset: assets/fonts/regular.ttf
 
   # fonts:
   #   - family: Schyler

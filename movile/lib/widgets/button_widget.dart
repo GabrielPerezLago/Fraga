@@ -17,14 +17,14 @@ class AppButton extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.brown,
           foregroundColor: Colors.white,
-          minimumSize: Size(100, 55),
+          minimumSize: Size(150, 65),
           padding:  EdgeInsets.all(10),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20)
           ),
           elevation: 20
         ),
-        child: Text(text, style: TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Frijole'),)
+        child: Text(text, style: TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Regular', fontSize: 20),)
     );
   }
 }

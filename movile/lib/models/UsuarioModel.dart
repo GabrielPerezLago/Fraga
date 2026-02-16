@@ -1,10 +1,10 @@
 class UsuarioModel {
   String id;
   String nombre;
-  String apellidos;
+  String? apellidos;
   String email;
   String password;
-  DateTime nacimiento;
+  DateTime? nacimiento;
   String rol;
 
   UsuarioModel({
@@ -24,7 +24,7 @@ class UsuarioModel {
       apellidos: json['apellidos'],
       email: json['email'],
       password: json['password'],
-      nacimiento: json['nacimiento'],
+      nacimiento: DateTime.parse(json['nacimiento']),
       rol: json['rol'],
     );
   }

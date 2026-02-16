@@ -1,5 +1,6 @@
 package com.gabriel.fraga.fragaapi.controllers
 
+import com.gabriel.fraga.fragaapi.models.UserDTO
 import com.gabriel.fraga.fragaapi.models.UserModel
 import com.gabriel.fraga.fragaapi.services.UsersService
 import com.gabriel.fraga.fragaapi.utils.ExceptionUtils
@@ -27,8 +28,8 @@ class UsersController(private val service: UsersService) {
     }
 
     @PostMapping("/login")
-    fun login(@RequestParam email: String?, @RequestParam password: String?): UserModel? {
-
+    fun login(@RequestParam email: String?, @RequestParam password: String?): UserDTO?{
+        Logger.getLogger("Entrando en login $email")
         if( password.isNullOrBlank()) ExceptionUtils.PasswordException("El campo password llego vacia")
 
         if (email == "" || email == null ) ExceptionUtils.EmailException("El campo email llego vacio ")
@@ -37,13 +38,16 @@ class UsersController(private val service: UsersService) {
     }
 
     @PostMapping("/register")
-    fun register(@RequestParam nombre: String?, @RequestParam email: String?, @RequestParam password: String?, @RequestParam nacimiento: Date?, @RequestParam rol: String?): UserModel? {
-
-
+    fun register(@RequestParam nombre: String?, @RequestParam email: String?, @RequestParam password: String?, @RequestParam nacimiento: Date?, @RequestParam rol: String?): UserDTO? {
+        Logger.getLogger("entrando en registro , $nombre, $email, $password, $nacimiento")
         val data = service.create(nombre, email, password, nacimiento, rol)
-
-        if (data.id == null) ExceptionUtils.CreateException("No se ha podido registrar el usuario")
+        if (data?.id == null) ExceptionUtils.CreateException("No se ha podido registrar el usuario")
         return data
+    }
+
+    @PostMapping("/loginbytoken")
+    fun getUserByTocken(token: String?): UserDTO? {
+        return service.getUserByTocken(token.toString())
     }
 
 }
