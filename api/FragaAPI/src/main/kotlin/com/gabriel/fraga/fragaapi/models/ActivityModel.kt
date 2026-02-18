@@ -8,6 +8,7 @@ data class ActivityModel(
     val id: String,
     val nombre: String,
     val descripcion: String,
-    val fecha: Date,
-    val plazas: Int
+    val fecha: String,
+    val plazas: Int,
+    val image: String
 )

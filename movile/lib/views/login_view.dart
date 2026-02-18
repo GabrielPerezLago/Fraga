@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:fraga_movile/objects/SESSION.dart';
 import 'package:fraga_movile/services/LoginService.dart';
@@ -18,6 +20,7 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView> {
   bool _register = false;
   String _error = "";
+  bool _loading = false;
   final LoginService login = LoginService();
   // Controladores Inputs
   final TextEditingController emailController = TextEditingController();
@@ -27,7 +30,7 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Stack(children: [ Scaffold(
       backgroundColor: Colors.green,
       resizeToAvoidBottomInset: true,
       body: Container(
@@ -82,6 +85,7 @@ class _LoginViewState extends State<LoginView> {
 
                             setState(() {
                               _error = "";
+                              _loading = true;
                             });
 
                             if (email.isEmpty || password.isEmpty) throw Exception("empty");
@@ -90,7 +94,9 @@ class _LoginViewState extends State<LoginView> {
                             SESSION.instance.isLogged ? Navigator.push(context, MaterialPageRoute(builder: (_) => PrimaryScreen())) : _error = "Algo ha salido mal";
 
                           } catch (ex) {
-
+                            setState(() {
+                              _loading = false;
+                            });
                             if(ex.toString().contains("400")){
                               setState(() {
                                 _error = "Las credenciales no son correctas";
@@ -109,6 +115,7 @@ class _LoginViewState extends State<LoginView> {
 
                             setState(() {
                               _error = "";
+                              _loading = true;
                             });
 
                             if (
@@ -149,7 +156,17 @@ class _LoginViewState extends State<LoginView> {
           ),
         ),
       ),
-    );
+    ),
+    if(_loading)
+      Container(
+        color: Colors.black26,
+        child: const Center(
+          child: CircularProgressIndicator(
+            color: Colors.green,
+          ),
+        ),
+      )
+    ]);
   }
 
   @override

@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:fraga_movile/models/ActivityModel.dart';
 import 'package:fraga_movile/models/UsuarioDTO.dart';
 import 'package:fraga_movile/models/UsuarioModel.dart';
 import 'package:fraga_movile/objects/SESSION.dart';
@@ -9,7 +11,7 @@ import 'package:fraga_movile/views/login_view.dart';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  static final String URL = 'http://192.168.68.107:8080';
+  static final String URL = 'http://192.168.68.100:8080';
 
   static Future<UsuarioDTO> login(String email, String password) async {
     final url = Uri.parse('$URL/usuarios/login')
@@ -73,7 +75,7 @@ class ApiService {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       }
-    ).timeout(const Duration(seconds: 10));
+    ).timeout(const Duration(seconds: 5));
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = jsonDecode(response.body);
@@ -85,4 +87,72 @@ class ApiService {
 
   }
 
+
+  //Actividades
+  static Future<List<ActivityModel>> getActivities() async {
+    final url = Uri.parse('$URL/actividades');
+    
+    final response = await http.get(
+      url,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        }
+    ).timeout(const Duration(seconds: 7));
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);
+
+      return data.map((a) => ActivityModel.fromJson(a)).toList();
+
+    } else {
+      throw Exception("No se han podido obtener las actividades");
+    }
+  }
+
+  static Future<List<ActivityModel>> getActivitiesNoReserve() async {
+    final url = Uri.parse('$URL/actividades/find-all-user')
+        .replace(queryParameters: {
+      'id': SESSION.instance.u?.id,
+    });
+
+    final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        }
+    ).timeout(const Duration(seconds: 7));
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);
+
+      return data.map((a) => ActivityModel.fromJson(a)).toList();
+
+    } else {
+      throw Exception("No se han podido obtener las actividades");
+    }
+  }
+
+  static Future<List<ActivityModel>> getActivitiesByUser() async {
+    final url = Uri.parse('$URL/actividades/find-user')
+        .replace(queryParameters: {
+          'id': SESSION.instance.u?.id,
+    });
+
+    final response = await http.post(
+      url,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        }
+    ).timeout(Duration(seconds: 7));
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);
+
+      return data.map((a) => ActivityModel.fromJson(a)).toList();
+    } else {
+      throw Exception("No se an podido obtener las actividades de del usuario ");
+    }
+
+
+  }
 }

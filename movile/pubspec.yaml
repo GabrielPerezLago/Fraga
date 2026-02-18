@@ -65,6 +65,11 @@ flutter:
     - assets/images/cloud_white.svg
     - assets/images/no_conexion.png
     - assets/images/noconexion.png
+    - assets/images/forest.jpeg
+    - assets/images/setas.jpg
+    - assets/images/senderismo.jpeg
+    - assets/images/yoga.jpg
+    - assets/images/ciclismo.jpg
   fonts:
     - family: Frijole
       fonts:

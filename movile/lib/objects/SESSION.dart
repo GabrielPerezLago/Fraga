@@ -1,8 +1,9 @@
 import 'package:fraga_movile/models/UsuarioDTO.dart';
+import 'package:fraga_movile/security/TokenStorage.dart';
 
 class SESSION {
   static final SESSION instance = SESSION._internal();
-
+  static final storage = TokenStorage();
   SESSION._internal();
 
   UsuarioDTO? u;
@@ -17,6 +18,7 @@ class SESSION {
   }
 
   void logout() {
+    storage.deleteToken();
     u = null;
   }
 

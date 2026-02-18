@@ -7,8 +7,12 @@ import java.util.Locale
 fun String.sanitizeEmail() = replace(Regex("[^a-zA-Z0-9@._+\\-]"), "")
     fun String.sanitezeText() = replace(Regex("\"[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ ]\""), "")
     fun String.sanitizeDangerous() = replace(Regex("[<>\"'%;()&+]"), "")
-
+    fun String.isvalidDateFormat(): Boolean {
+        val regex = Regex("""\d{2}/\d{2}/\d{4}""")
+        return regex.matches(this)
+    }
     fun String.sanitizeDate(): String? {
+        if (this.isvalidDateFormat()) return this
         val input = SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH)
         val date = input.parse(this) ?: return null
         val output = SimpleDateFormat("dd/MM/yyyy")
