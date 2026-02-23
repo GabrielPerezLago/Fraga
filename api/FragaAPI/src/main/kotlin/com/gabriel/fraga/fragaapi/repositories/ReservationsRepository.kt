@@ -6,4 +6,7 @@ import org.springframework.data.mongodb.repository.MongoRepository
 
 interface ReservationsRepository: MongoRepository<ReservationsModel, String> {
     fun findByIdUser(userID: ObjectId): List<ReservationsModel>
+    fun findByIdUserAndIdActivity(idUser: ObjectId, idActivity: ObjectId): ReservationsModel
+    fun deleteByIdUserAndIdActivity(idUser: ObjectId, idActivity: ObjectId): Long
+
 }

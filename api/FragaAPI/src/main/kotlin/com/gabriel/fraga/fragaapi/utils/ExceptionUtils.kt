@@ -28,5 +28,9 @@ object ExceptionUtils: FatherExceptionUtil(){
         super.sendBadRequestException("UserId", exception)
     }
 
+    fun sendActivityException(exception: String) {
+        super.sendInsertException("Activity" ,exception)
+    }
+
 
 }

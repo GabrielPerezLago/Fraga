@@ -13,4 +13,8 @@ open class FatherExceptionUtil {
         throw ResponseStatusException(HttpStatus.NOT_IMPLEMENTED,"$type Error: $error")
     }
 
+    protected open fun sendActivityException(type: String, error: String) {
+        throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,"$type Error: $error")
+    }
+
 }

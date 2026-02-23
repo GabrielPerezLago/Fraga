@@ -2,10 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fraga_movile/models/ActivityModel.dart';
+import 'package:fraga_movile/objects/SESSION.dart';
 import 'package:fraga_movile/services/ActivitiesService.dart';
 import 'package:fraga_movile/services/ApiService.dart';
 import 'package:fraga_movile/utils/AppUtils.dart';
 import 'package:fraga_movile/widgets/basic_card_widget.dart';
+import 'package:fraga_movile/widgets/button_widget.dart';
 import 'package:fraga_movile/widgets/expand_card_widget.dart';
 
 class ActivitiesView extends StatefulWidget {
@@ -17,6 +19,9 @@ class ActivitiesView extends StatefulWidget {
 
 class _ActivitiesViewState extends State<ActivitiesView> {
   final AppUtils util = AppUtils();
+
+  List<ActivityModel> activities = [];
+
   late Future<List<ActivityModel>> activitiesFuture;
   final ActivitiesService service = ActivitiesService();
   int? expandCards;
@@ -35,20 +40,21 @@ class _ActivitiesViewState extends State<ActivitiesView> {
     return SafeArea(child: SingleChildScrollView(
       child: Column(
         children: [
-          Padding(padding: EdgeInsets.all(20), child: Text('Actividates', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 50, fontFamily: 'Regular', color: Colors.white),),),
+          Padding(padding: EdgeInsets.all(20), child: Text('Actividades', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 50, fontFamily: 'Regular', color: Colors.white),),),
           Padding(padding: EdgeInsets.all(10), child: Text('Reserva tu plaza en alguna de nuestras actividades al aire libre', style: TextStyle(fontSize: 30, fontFamily: 'Regular', color: Colors.lightGreenAccent, fontWeight: FontWeight.bold), textAlign: TextAlign.center,)),
           FutureBuilder<List<ActivityModel>>(future: activitiesFuture , builder: (context, snapshot) {
-            // Con eto capturo posibles errores
             if (snapshot.connectionState == ConnectionState.waiting){
               return Padding(padding: EdgeInsets.all(20), child: CircularProgressIndicator(color: Colors.green));
             } else if (snapshot.hasError) {
               print(snapshot.error);
               return Padding(padding: EdgeInsets.all(20), child: Text('Error al cargar las actividades', style: TextStyle(fontFamily: 'Regular', fontWeight: FontWeight.bold, fontSize: 40, color: Colors.red),));
             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              return Padding(padding: EdgeInsets.all(20), child: Text('¡Vaya!, no hay actividades en este momento o te as anotado a todas ', style: TextStyle(fontFamily: 'Regular', fontWeight: FontWeight.bold, fontSize: 30, color: Colors.red), textAlign: TextAlign.center,));
+              return Padding(padding: EdgeInsets.only(left: 40, right: 40, top: 90, bottom: 70), child: Text('¡Vaya!, No hay actividades en este momento o te has anotado a todas ', style: TextStyle(fontFamily: 'Regular', fontWeight: FontWeight.bold, fontSize: 30, color: Colors.red), textAlign: TextAlign.center,));
             }
 
-            final activities = snapshot.data!;
+            if(this.activities.isEmpty){
+              this.activities = snapshot.data!;
+            }
 
             return Container(
               padding: EdgeInsets.all(5),
@@ -66,7 +72,28 @@ class _ActivitiesViewState extends State<ActivitiesView> {
                         setState(() {
                           expandCards = expandCards == index ? null : index;
                         })
-                      }, child: ExpandCard( image: util.getUrlImages(model.image ?? "setas") ?? "assets/images/setas.jpg", title: model.nombre, data: [model.descripcion ?? "", "Plazas: ${model.plazas.toString()}", "Fecha: ${model.fecha}"],),) ;
+                      }, child: SESSION.instance.u?.rol == 'admin' ?  ExpandCard( image: util.getUrlImages(model.image ?? 'setas') ?? "assets/images/setas.jpg", title: model.nombre, data: [model.descripcion ?? "", "Plazas: ${model.plazas.toString()}", "Fecha: ${model.fecha}"], reservarEvent: () async {
+                        await service.reservate(model.id!);
+                        setState(() {
+                          activities.removeAt(index);
+                          expandCards = null;
+                        });
+                      }, eliminarEvent: () async {
+                        await service.eliminar(model.id!);
+                        setState(() {
+                          activities.removeAt(index);
+                          expandCards = null;
+                        });
+                      },
+                      ) :  ExpandCard( image: util.getUrlImages(model.image ?? 'setas') ?? "assets/images/setas.jpg", title: model.nombre, data: [model.descripcion ?? "", "Plazas: ${model.plazas.toString()}", "Fecha: ${model.fecha}"], reservarEvent: () async {
+                        await service.reservate(model.id!);
+                        setState(() {
+                          activities.removeAt(index);
+                          expandCards = null;
+                        });
+                      }
+                      )
+                      );
                     } else {
                       return GestureDetector( onTap: () => {
                         setState(() {
@@ -75,6 +102,7 @@ class _ActivitiesViewState extends State<ActivitiesView> {
                       }, child: SimpleCard(tittle: model.nombre, image: util.getUrlImages(model.image ?? "setas") ?? 'assets/images/setas.jpg',),);
                     }
                   }).toList(),
+
                 ],
               ),
             );

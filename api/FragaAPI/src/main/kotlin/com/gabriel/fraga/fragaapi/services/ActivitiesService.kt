@@ -3,9 +3,16 @@ package com.gabriel.fraga.fragaapi.services
 import com.gabriel.fraga.fragaapi.models.ActivityModel
 import com.gabriel.fraga.fragaapi.models.ReservationsDTO
 import com.gabriel.fraga.fragaapi.repositories.ActivitiesRepository
+import com.gabriel.fraga.fragaapi.utils.ExceptionUtils
 import com.gabriel.fraga.fragaapi.utils.sanitizeDate
+import com.gabriel.fraga.fragaapi.utils.toLocalDateTimeStrict
 import org.bson.types.ObjectId
+import org.springframework.data.mongodb.core.aggregation.MergeOperation.UniqueMergeId.id
+import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.stereotype.Service
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Optional
 
 @Service
@@ -23,7 +30,7 @@ class ActivitiesService(private val repo: ActivitiesRepository, private val rese
         for (reservation: ReservationsDTO in reservas) {
             var activity = this.findById(reservation.idActivity)
             if (activity != null ) {
-                activity.fecha.sanitizeDate()
+                activity.fecha
                 activities.add(activity)
             }
         }
@@ -35,19 +42,56 @@ class ActivitiesService(private val repo: ActivitiesRepository, private val rese
         val userActivities = this.findResByUser(userID)
         val activities = findByAll();
 
-        if (userActivities.isNullOrEmpty()) return activities
+       val reservasId = userActivities.map { it.id }.toSet()
+        return activities.filter { it.id !in reservasId }
+    }
 
-        var activityList= ArrayList<ActivityModel>()
+    fun cretateReserva(idUser: ObjectId, idActivity: ObjectId): Boolean {
+        var activity: ActivityModel? = findById(idActivity.toString())
+        if (activity == null) return false
 
-        for (ai: ActivityModel in activities) {
-            for (aj: ActivityModel in userActivities) {
-                if(ai.id !== ai.id ) {
-                    activityList.add(ai)
-                }
-            }
+        val isReserved: Boolean = reservatioService.createReserva(idUser, idActivity)
+        if (!isReserved) return false
+
+        activity.plazas = (activity.plazas ?: 0) - 1
+        repo.save(activity)
+
+        return true
+    }
+
+    fun updateReservaActivity(idUser: ObjectId, idActivity: ObjectId): Boolean {
+        var activity = repo.findById(idActivity.toString()).orElse(null)
+
+        if (activity == null) ExceptionUtils.sendActivityException("No se ha encontrado ninguna actividad")
+
+        val hoy = LocalDateTime.now()
+
+        if (hoy.isAfter(activity.fecha.minusMinutes(15))) {
+            reservatioService.noAsistirReserva(idUser, idActivity)
+        } else {
+            reservatioService.cancelarReserva(idUser, idActivity)
         }
 
-        return activityList
+        return true
+    }
 
+
+    fun deleteActivity(id: String) {
+        if (id.isNullOrBlank()) ExceptionUtils.sendActivityException("El id de la actividad no puede estar vacío")
+        repo.deleteById(id)
+    }
+
+    fun createActivity(nombre: String, descripcion: String, fecha: String, plazas: Int, image: String ): ActivityModel {
+        val activity = ActivityModel(
+            null,
+            nombre,
+            descripcion,
+            fecha.toLocalDateTimeStrict(),
+            false,
+            plazas,
+            image
+        )
+
+        return repo.save(activity)
     }
 }

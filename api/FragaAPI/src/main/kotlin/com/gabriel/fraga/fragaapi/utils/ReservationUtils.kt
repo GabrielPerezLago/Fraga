@@ -7,10 +7,10 @@ class ReservationUtils {
 
     fun parseIdsToStrings(model: ReservationsModel): ReservationsDTO {
         return ReservationsDTO(
-            model.id,
+            model.id ,
             model.idUser.toString(),
             model.idActivity.toString(),
-            model.realizada
+            model.estado
         )
     }
 
@@ -23,4 +23,6 @@ class ReservationUtils {
 
         return res
     }
+
+
 }

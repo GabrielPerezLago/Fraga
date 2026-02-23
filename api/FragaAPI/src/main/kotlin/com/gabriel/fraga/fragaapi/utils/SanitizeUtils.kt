@@ -1,6 +1,8 @@
 package com.gabriel.fraga.fragaapi.utils
 
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
 
@@ -17,4 +19,9 @@ fun String.sanitizeEmail() = replace(Regex("[^a-zA-Z0-9@._+\\-]"), "")
         val date = input.parse(this) ?: return null
         val output = SimpleDateFormat("dd/MM/yyyy")
         return output.format(date)
+    }
+
+    fun String.toLocalDateTimeStrict(): LocalDateTime {
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm")
+        return LocalDateTime.parse(this, formatter)
     }

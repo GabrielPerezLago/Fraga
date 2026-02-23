@@ -67,13 +67,13 @@ class _LoginViewState extends State<LoginView> {
                       // *********** FORMULARIO ***********
 
                       // **** Nombre
-                      _register ? DefaulAppInput(defaultText: 'Inserta tu nombre y Apellidos', padding: 5, controller: nameController,) : SizedBox.shrink(),
+                      _register ? DefaultAppInput(defaultText: 'Inserta tu nombre y Apellidos', padding: 5, controller: nameController,) : SizedBox.shrink(),
                       // **** Email
-                      DefaulAppInput( defaultText: 'Inserta tu Correo Electronico', padding: 5, controller: emailController,),
+                      DefaultAppInput( defaultText: 'Inserta tu Correo Electronico', padding: 5, controller: emailController,),
                       // **** Password
-                      DefaulAppInput(defaultText: 'Inserta tu Contraseña', obscureText: true, padding: 5, controller: passwordController,),
+                      DefaultAppInput(defaultText: 'Inserta tu Contraseña', obscureText: true, padding: 5, controller: passwordController,),
                       // **** Nacimiento
-                      _register ? DefaulAppInput(defaultText: 'Inserta tu Fecha de nacimiento', padding: 5, controller: nacimientoController,) : SizedBox.shrink(),
+                      _register ? DefaultAppInput(defaultText: 'Inserta tu Fecha de nacimiento', padding: 5, controller: nacimientoController,) : SizedBox.shrink(),
 
                       Text(_error, style: TextStyle(fontFamily: 'Regular', color: Colors.red, fontSize: 25, fontWeight: FontWeight.bold)),
                       Padding(padding: EdgeInsets.all(20), child: AppButton(text: !_register ? 'Inciar Sesión' : 'Registrarse', onClick: () async {

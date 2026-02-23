@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class DefaulAppInput extends StatelessWidget {
+class DefaultAppInput extends StatelessWidget {
   final String defaultText;
   final bool obscureText;
   final double padding;
   final TextEditingController controller;
 
-  const DefaulAppInput({
+  const DefaultAppInput({
     super.key,
     required this.defaultText,
     this.obscureText = false,
@@ -24,6 +24,7 @@ class DefaulAppInput extends StatelessWidget {
         decoration: InputDecoration(
           hintText: defaultText,
           filled: true,
+          fillColor: Colors.white,
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
         ),
       ),

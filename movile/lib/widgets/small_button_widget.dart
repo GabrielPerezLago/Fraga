@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 class SmallButton extends StatelessWidget {
   final String text;
-  final VoidCallback onClick;
+  final VoidCallback? onClick;
   final Color color;
 
   const SmallButton({

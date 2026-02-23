@@ -9,7 +9,23 @@ class ExpandCard extends StatelessWidget {
   final String image;
   final String title;
   final List<String> data;
-  const ExpandCard({ super.key, this.image = "assets/images/yoga.jpg" , required this.title, required this.data});
+
+
+
+
+  final VoidCallback? reservarEvent;
+  final VoidCallback? cancelarEvent;
+  final VoidCallback? eliminarEvent;
+
+  const ExpandCard({
+    super.key,
+    this.image = "assets/images/yoga.jpg",
+    required this.title,
+    required this.data,
+    this.reservarEvent,
+    this.cancelarEvent,
+    this.eliminarEvent
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -46,8 +62,11 @@ class ExpandCard extends StatelessWidget {
                   width: double.infinity,
                   alignment: Alignment.centerRight,
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Padding(padding: EdgeInsetsGeometry.all(10), child:SmallButton(text: 'Reservar', onClick: () {}))
+                      reservarEvent != null ? Padding(padding: EdgeInsetsGeometry.all(10), child:SmallButton(text: 'Reservar', onClick: reservarEvent , color: Colors.blueAccent,)) : SizedBox.shrink(),
+                      cancelarEvent != null ? Padding(padding: EdgeInsetsGeometry.all(10), child: SmallButton(text: "Cancelar", onClick: cancelarEvent, color: Colors.red, ),): SizedBox.shrink(),
+                      eliminarEvent != null ? Padding(padding: EdgeInsetsGeometry.all(10), child: SmallButton(text: "Eliminar", onClick: eliminarEvent, color: Colors.red, ),) : SizedBox.shrink(),
                     ],
                   ),
                 )

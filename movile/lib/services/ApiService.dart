@@ -152,7 +152,79 @@ class ApiService {
     } else {
       throw Exception("No se an podido obtener las actividades de del usuario ");
     }
+  }
 
+  static Future<void> reserve(String idUser, String idActivity) async {
+    final url = Uri.parse('$URL/actividades/create-reserva')
+        .replace(queryParameters: {
+          "idUser": idUser,
+          "idActivity": idActivity
+        });
+    
+    final response = await http.post(url, headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    }).timeout(Duration(seconds: 7));
+
+    if (response.statusCode != 200) throw Exception("Error al reservar la actividad");
+  }
+
+  static Future<void> cancelar(String idUser, String idActivity) async {
+    final url = Uri.parse('$URL/actividades/cancelar')
+        .replace(queryParameters: {
+          'idUser': idUser,
+          'idActivity': idActivity
+    });
+
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      }
+    ).timeout(Duration(seconds: 5));
+
+    if (response.statusCode != 200) throw Exception("Error al cancelar la actividad");
 
   }
+
+  static Future<void> eliminar(String id) async {
+    final url = Uri.parse('$URL/actividades/delete')
+        .replace( queryParameters: {
+          'id': id
+    });
+    
+    final response = await http.delete(
+        url,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        }
+    ).timeout(Duration(seconds: 5));
+
+    if (response.statusCode != 200) throw Exception("Error al eliminar la actividad");
+  }
+
+  static Future<ActivityModel> create(String nombre, String descripcion, String fecha, int plazas, String image) async {
+    final url = Uri.parse('$URL/actividades/create')
+        .replace( queryParameters: {
+          'nombre': nombre,
+          'descripcion': descripcion,
+          'fecha': fecha,
+          'plazas': plazas.toString(),
+          'images': image
+        });
+
+    final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        }
+    ).timeout(Duration(seconds: 5));
+
+    if (response.statusCode != 200) throw Exception("Error al eliminar la actividad");
+
+    final Map<String, dynamic> data = jsonDecode(response.body);
+    var activity = ActivityModel.fromJson(data);
+    return activity;
+  }
+
+
 }

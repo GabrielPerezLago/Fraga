@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 class AppButton extends StatelessWidget {
   final String text;
   final VoidCallback onClick;
+  final Color color;
   const AppButton({
     super.key,
     required this.text,
-    required this.onClick
+    required this.onClick,
+    this.color = Colors.brown
   });
 
   @override
@@ -15,7 +17,7 @@ class AppButton extends StatelessWidget {
     return ElevatedButton(
         onPressed: onClick,
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.brown,
+          backgroundColor: color,
           foregroundColor: Colors.white,
           minimumSize: Size(150, 65),
           padding:  EdgeInsets.all(10),

@@ -1,12 +1,14 @@
 
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:fraga_movile/models/UsuarioDTO.dart';
 import 'package:fraga_movile/models/UsuarioModel.dart';
 import 'package:fraga_movile/objects/SESSION.dart';
 import 'package:fraga_movile/security/TokenStorage.dart';
 import 'package:fraga_movile/services/ApiService.dart';
 import 'package:fraga_movile/views/error_view.dart';
+import 'package:fraga_movile/views/login_view.dart';
 
 
 class LoginService {
@@ -43,5 +45,15 @@ class LoginService {
     }
   }
 
+  void logout(BuildContext contex) async {
+    final tokenStorage = TokenStorage();
+
+    await tokenStorage.deleteToken();
+
+    SESSION.instance.u = null;
+
+    Navigator.push(contex, MaterialPageRoute(builder: (_) => LoginView()));
+
+  }
 
 }

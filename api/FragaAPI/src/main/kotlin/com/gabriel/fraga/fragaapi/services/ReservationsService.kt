@@ -22,6 +22,31 @@ class ReservationsService(private val repository: ReservationsRepository )  {
         return utils.parseListIdToStrings(reservas)
     }
 
+    fun createReserva(idUser: ObjectId, idActivity: ObjectId): Boolean {
+        val reservation = ReservationsModel(
+            null,
+            idUser,
+            idActivity,
+            "asistencia"
+        )
+        repository.save(reservation)
+        return true
+    }
+
+    fun cancelarReserva(idUser: ObjectId, idActivity: ObjectId): Boolean? {
+        val reservation =  repository.deleteByIdUserAndIdActivity(idUser, idActivity)
+        if (reservation == 0L) return false
+        return true
+    }
+
+    fun noAsistirReserva(idUser: ObjectId, idActivity: ObjectId): ReservationsModel? {
+        var reserva = repository.findByIdUserAndIdActivity(idUser, idActivity);
+
+        reserva.estado = "no asistida"
+        return repository.save(reserva)
+    }
+
+
 
 
 }

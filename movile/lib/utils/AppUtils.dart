@@ -9,4 +9,13 @@ class AppUtils {
 
     return images[img];
   }
+
+  String parseFecha(String fecha) {
+    return fecha.replaceFirstMapped('T', (it) => ' a las ');
+  }
+
+  String invertParseFecha(String fecha) {
+    String newFecha = fecha.replaceAll('/', "-");
+    return newFecha.replaceAll(' a las ', "T");
+  }
 }

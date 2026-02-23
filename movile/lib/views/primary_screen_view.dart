@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fraga_movile/objects/SESSION.dart';
+import 'package:fraga_movile/services/LoginService.dart';
 import 'package:fraga_movile/views/activities_user_view.dart';
 import 'package:fraga_movile/views/activities_view.dart';
+import 'package:fraga_movile/views/create_activity_view.dart';
 import 'package:fraga_movile/views/home_view.dart';
 import 'package:fraga_movile/widgets/classic_button_widget.dart';
 
@@ -21,11 +23,13 @@ class _PrimaryScreenState extends State<PrimaryScreen> {
   final List<Widget> _paginas = [
     HomeView(),
     ActivitiesView(),
-    ActivitiesUserView()
+    ActivitiesUserView(),
+    CreateActivityView()
   ];
-  String _text = "Hola";
+
   @override
   Widget build(BuildContext context) {
+    final LoginService service = LoginService();
     return Scaffold(
       backgroundColor: Colors.green,
       resizeToAvoidBottomInset: true,
@@ -39,7 +43,7 @@ class _PrimaryScreenState extends State<PrimaryScreen> {
               Text(SESSION.instance.u?.nombre ?? "", style: TextStyle(fontFamily: 'Regular', fontWeight: FontWeight.bold),)
           ], ),
         actions: [
-          Padding(padding: EdgeInsets.all(5), child: Icon(Icons.account_circle, size: 40, color: Colors.brown,),)
+          GestureDetector(onTap: () { service.logout(context); } ,child:  Padding(padding: EdgeInsets.all(5), child: Icon(Icons.account_circle, size: 40, color: Colors.brown,),))
         ],
         
       ),
@@ -65,9 +69,11 @@ class _PrimaryScreenState extends State<PrimaryScreen> {
          selectedFontSize: 15, 
          items: [
            BottomNavigationBarItem(icon: Icon(Icons.home), label: "Inicio", ), 
-           BottomNavigationBarItem(icon: Icon(Icons.hiking), label: 'Actividades'), 
+           BottomNavigationBarItem(icon: Icon(Icons.hiking), label: 'Actividades'),
            BottomNavigationBarItem(icon: Icon(Icons.list), label: "Reservas"),
-           BottomNavigationBarItem(icon: Icon(Icons.logout), label: "Cerrar Sesión")
+           if(SESSION.instance.u?.rol == 'admin') BottomNavigationBarItem(icon: Icon(Icons.add), label: 'Añadir Actividad'),
+           if(SESSION.instance.u?.rol == 'admin') BottomNavigationBarItem(icon: Icon(Icons.account_box), label: 'Usuarios'),
+           
      ]),
     );
   }
