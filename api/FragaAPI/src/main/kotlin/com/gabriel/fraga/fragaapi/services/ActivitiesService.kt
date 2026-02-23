@@ -1,8 +1,10 @@
 package com.gabriel.fraga.fragaapi.services
 
+import com.gabriel.fraga.fragaapi.models.ActivityDTO
 import com.gabriel.fraga.fragaapi.models.ActivityModel
 import com.gabriel.fraga.fragaapi.models.ReservationsDTO
 import com.gabriel.fraga.fragaapi.repositories.ActivitiesRepository
+import com.gabriel.fraga.fragaapi.utils.ActivityUtils
 import com.gabriel.fraga.fragaapi.utils.ExceptionUtils
 import com.gabriel.fraga.fragaapi.utils.sanitizeDate
 import com.gabriel.fraga.fragaapi.utils.toLocalDateTimeStrict
@@ -23,15 +25,31 @@ class ActivitiesService(private val repo: ActivitiesRepository, private val rese
 
     fun findById(activityID: String ): ActivityModel? = repo.findById(activityID).orElse(null)
 
-    fun findResByUser(id: ObjectId): List<ActivityModel> {
+    fun findResByUser(id: ObjectId): List<ActivityDTO> {
         val reservas: List<ReservationsDTO> = reservatioService.findByUserId(id)
-        var activities = ArrayList<ActivityModel>()
-
+        var activities = ArrayList<ActivityDTO>()
+        var canceled = false
         for (reservation: ReservationsDTO in reservas) {
             var activity = this.findById(reservation.idActivity)
             if (activity != null ) {
-                activity.fecha
-                activities.add(activity)
+
+                if (ActivityUtils().isAfterToday(activity.fecha)) activity.realizada = true
+
+                if(activity.realizada == true && reservation.idActivity == activity.id) canceled = true
+
+                val dto = ActivityDTO(
+                    activity.id,
+                    activity.nombre,
+                    activity.descripcion,
+                    activity.fecha,
+                    activity.realizada,
+                    activity.plazas,
+                    activity.image,
+                    canceled,
+                )
+
+            activities.add(dto)
+
             }
         }
 
@@ -42,7 +60,7 @@ class ActivitiesService(private val repo: ActivitiesRepository, private val rese
         val userActivities = this.findResByUser(userID)
         val activities = findByAll();
 
-       val reservasId = userActivities.map { it.id }.toSet()
+        val reservasId = userActivities.filter{ !ActivityUtils().isAfterToday(it.fecha) }.map { it.id }.toSet()
         return activities.filter { it.id !in reservasId }
     }
 
@@ -64,9 +82,9 @@ class ActivitiesService(private val repo: ActivitiesRepository, private val rese
 
         if (activity == null) ExceptionUtils.sendActivityException("No se ha encontrado ninguna actividad")
 
-        val hoy = LocalDateTime.now()
+        val isAfterMinutes = ActivityUtils().isAfterMinutes(activity.fecha)
 
-        if (hoy.isAfter(activity.fecha.minusMinutes(15))) {
+        if (isAfterMinutes) {
             reservatioService.noAsistirReserva(idUser, idActivity)
         } else {
             reservatioService.cancelarReserva(idUser, idActivity)

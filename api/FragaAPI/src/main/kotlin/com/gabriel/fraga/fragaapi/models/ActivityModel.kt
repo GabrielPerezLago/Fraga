@@ -8,9 +8,9 @@ import java.time.LocalDateTime
 data class ActivityModel(
     val id: String? = null,
     val nombre: String,
-    val descripcion: String,
-    val fecha: LocalDateTime,
-    val realizada: Boolean,
+    var descripcion: String,
+    var fecha: LocalDateTime,
+    var realizada: Boolean,
     var plazas: Int,
-    val image: String
+    var image: String
 )
