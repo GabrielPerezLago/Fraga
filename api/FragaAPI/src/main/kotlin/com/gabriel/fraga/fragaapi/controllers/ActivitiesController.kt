@@ -1,5 +1,6 @@
 package com.gabriel.fraga.fragaapi.controllers
 
+import com.gabriel.fraga.fragaapi.models.ActivityDTO
 import com.gabriel.fraga.fragaapi.models.ActivityModel
 import com.gabriel.fraga.fragaapi.models.ReservationsModel
 import com.gabriel.fraga.fragaapi.services.ActivitiesService
@@ -30,7 +31,7 @@ class ActivitiesController(private val service: ActivitiesService) {
     fun findById(@RequestParam id: String): ActivityModel = service.findById(id) as ActivityModel
 
     @PostMapping("find-user")
-    fun findByUser(id: String): List<ActivityModel> {
+    fun findByUser(id: String): List<ActivityDTO> {
         val objId = ObjectId(id)
         return service.findResByUser(objId)
     }
